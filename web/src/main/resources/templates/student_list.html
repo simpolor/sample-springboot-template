@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+    <script>
+        function f_register() {
+            location.href = "/student/register";
+        }
+    </script>
+    <style>
+        table, tr, th, td {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="header :: header"></div><!-- fragment의 내용을 가져옴 -->
+
+    <h1>Student List</h1>
+
+    <div>
+        <span th:text="'TotalCount : ' + ${totalCount}">0</span>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Seq</th>
+            <th>Name</th>
+            <th>Grade</th>
+            <th>Age</th>
+            <th>Hobby</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="student : ${list}">
+                <td th:text="${student.seq}"></td>
+                <td><a th:text="${student.name}" th:href="@{/student/view/{seq}(seq=${student.seq})}"></a></td>
+                <td th:text="${student.grade}"></td>
+                <td th:text="${student.age}"></td>
+                <td th:text="${student.hobby}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+    <button onclick="f_register();">등록</button>
+
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo_db?serverTimezone=UTC
+    username: demo
+    password: demo
+
+logging:
+
+  path: logs
+  file:
+    max-size: 100MB
+    max-history: 30
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+    dateformat: "yyyy-MM-dd HH:mm:ss"
+  level:
+    org.springframework: ERROR
+    io.simpolor.web: INFO
