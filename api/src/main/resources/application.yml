@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+# 개발자가 설정하지 않으면 아래 정보로 기본값이 설정됨
+spring:
+  application:
+    name: api-template
+
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+        one-indexed-parameters: true
+        max-page-size: 100
+
+  jpa:
+    database: H2
+    hibernate:
+      ddl-auto: none
+
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true # 콘솔 활성화 여부
+      path: /h2-console # 콘솔 주소변경
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+
+logging:
+  file:
+    path: logs
+    max-size: 100MB
+    max-history: 30
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+    dateformat: "yyyy-MM-dd HH:mm:ss"
+  level:
+    org.springframework: ERROR
+    io.simpolor.web: DEBUG
