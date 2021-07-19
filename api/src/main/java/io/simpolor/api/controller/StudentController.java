@@ -1,6 +1,6 @@
 package io.simpolor.api.controller;
 
-import io.simpolor.api.advice.WithServiceResponse;
+import io.simpolor.api.handler.WithServiceResponse;
 import io.simpolor.api.model.StudentRequest;
 import io.simpolor.api.model.StudentResponse;
 import io.simpolor.api.model.StudentSearchRequest;

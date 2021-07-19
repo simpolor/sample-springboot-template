@@ -1,4 +1,4 @@
-package io.simpolor.api.advice;
+package io.simpolor.api.handler;
 
 import io.simpolor.api.exception.ApplicationException;
 import lombok.Value;

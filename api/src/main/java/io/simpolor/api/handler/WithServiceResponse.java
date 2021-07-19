@@ -1,4 +1,4 @@
-package io.simpolor.api.advice;
+package io.simpolor.api.handler;
 
 import java.lang.annotation.*;
 

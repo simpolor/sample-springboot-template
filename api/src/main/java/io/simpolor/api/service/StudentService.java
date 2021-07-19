@@ -1,16 +1,15 @@
 package io.simpolor.api.service;
 
 import com.querydsl.core.QueryResults;
+import io.simpolor.api.exception.NotFoundException;
 import io.simpolor.api.repository.StudentRepository;
 import io.simpolor.api.repository.entity.Student;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +50,7 @@ public class StudentService {
         Optional<Student> student = studentRepository.findById(seq);
 
         if(!student.isPresent()){
-            throw new EntityNotFoundException("seq : "+seq);
+            throw new NotFoundException("Notfound seq : {}", seq);
         }
 
         return student.get();
@@ -65,7 +64,7 @@ public class StudentService {
 
         Optional<Student> result = studentRepository.findById(student.getSeq());
         if(!result.isPresent()){
-            throw new EntityNotFoundException("seq : "+student.getSeq());
+            throw new NotFoundException("Notfound seq : {}", student.getSeq());
         }
         studentRepository.save(student);
     }
