@@ -1,10 +1,10 @@
 package io.simpolor.api.controller;
 
-import io.simpolor.api.handler.WithServiceResponse;
-import io.simpolor.api.model.StudentRequest;
-import io.simpolor.api.model.StudentResponse;
-import io.simpolor.api.model.StudentSearchRequest;
-import io.simpolor.api.model.StudentSearchResponse;
+import io.simpolor.api.advice.WithServiceResponse;
+import io.simpolor.api.model.dto.StudentRequest;
+import io.simpolor.api.model.dto.StudentResponse;
+import io.simpolor.api.model.dto.StudentSearchRequest;
+import io.simpolor.api.model.dto.StudentSearchResponse;
 import io.simpolor.api.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

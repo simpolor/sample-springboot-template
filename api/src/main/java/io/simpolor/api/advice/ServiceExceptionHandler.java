@@ -1,4 +1,4 @@
-package io.simpolor.api.handler;
+package io.simpolor.api.advice;
 
 import io.simpolor.api.exception.ApplicationException;
 import io.simpolor.api.exception.ServiceException;

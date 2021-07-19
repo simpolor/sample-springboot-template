@@ -1,4 +1,4 @@
-package io.simpolor.api.handler;
+package io.simpolor.api.advice;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

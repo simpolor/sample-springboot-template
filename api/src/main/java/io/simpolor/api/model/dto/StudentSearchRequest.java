@@ -1,4 +1,4 @@
-package io.simpolor.api.model;
+package io.simpolor.api.model.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

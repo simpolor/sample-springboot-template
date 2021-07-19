@@ -1,4 +1,4 @@
-package io.simpolor.api.model;
+package io.simpolor.api.model.dto;
 
 import io.simpolor.api.repository.entity.Student;
 import lombok.*;

@@ -1,7 +1,7 @@
 package io.simpolor.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.simpolor.api.model.StudentRequest;
+import io.simpolor.api.model.dto.StudentRequest;
 import io.simpolor.api.repository.entity.Student;
 import io.simpolor.api.service.StudentService;
 import lombok.AccessLevel;
