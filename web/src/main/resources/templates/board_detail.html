@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Detail</title>
+    <script>
+        function fnList() {
+            location.href = "/board/list";
+        }
+
+        function fnModify() {
+            var seq = [[${board.seq}]]
+            location.href = "/board/modify/"+seq;
+        }
+
+        function fnDelete() {
+            var form = document.getElementById("boardForm");
+            form.submit();
+        }
+    </script>
+    <style>
+        table, tr, th, td {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="header :: header"></div>
+
+    <h1>Board Detail</h1>
+
+    <form id="boardForm" role="form" th:action="@{/board/delete/{seq}(seq=${board.seq})}" th:method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Seq : </th>
+                    <td><span th:text="${board.seq}"></span></td>
+                </tr>
+                <tr>
+                    <th>Title : </th>
+                    <td><span th:text="${board.title}"></td>
+                </tr>
+                <tr>
+                    <th>Content : </th>
+                    <td><span th:text="${board.content}"></span></td>
+                </tr>
+                <tr>
+                    <th>CreatedAt : </th>
+                    <td><span th:text="${board.createdAt}"></span></td>
+                </tr>
+                <tr>
+                    <th>UpdatedAt : </th>
+                    <td><span th:text="${board.updatedAt}"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <hr />
+
+    <button onclick="fnList();">목록</button>
+    <button onclick="fnModify();">수정</button>
+    <button onclick="fnDelete();">삭제</button>
+
+
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

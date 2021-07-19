@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Modify</title>
+    <script>
+        function fnSubmit() {
+            var form = document.getElementById("boardForm");
+            form.submit();
+        }
+
+        function fnList() {
+            location.href = "/board/list";
+        }
+    </script>
+    <style>
+        table, tr, th, td {
+            border: 1px solid #000;
+        }
+        .error-input {
+            border: 1px solid #FF0000;
+        }
+        .error-message {
+            color: #FF0000;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="header :: header"></div>
+
+    <h1>Board Form</h1>
+    <hr />
+
+    <form id="boardForm" role="form" th:action="@{/board/modify/{seq}(seq=${board.seq})}" th:method="post"  th:object="${board}">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Title : </th>
+                    <td>
+                        <input type="text" th:name="title" th:id="title" th:value="${board.title}" />
+                        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" th:class="error-message">
+                            제목을 입력해주세요.
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Content : </th>
+                    <td>
+                        <input type="text" th:name="content" th:id="content" th:value="${board.content}" />
+                        <span th:if="${#fields.hasErrors('content')}">
+                            내용을 입력해주세요.
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Type : </th>
+                    <td>
+                        <input type="text" th:name="type" th:id="type" th:value="${board.type}" />
+                        <span th:if="${#fields.hasErrors('type')}">
+                            타입이 일치하지 않습니다.
+                        </span>
+                    </td>
+                </tr>
+                <tr th:if="${#fields.hasErrors('*')}">
+                    <th>Error Messages : </th>
+                    <td>
+                        <span th:each="err : ${#fields.errors('*')}" th:text="${err}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <hr />
+
+    <button onclick="fnSubmit()">수정</button>
+    <button onclick="fnList()">목록</button>
+
+    <div th:include="footer :: footer"></div>
+</body>
+</html>

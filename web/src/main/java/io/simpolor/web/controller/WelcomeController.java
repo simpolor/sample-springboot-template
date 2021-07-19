@@ -3,18 +3,16 @@ package io.simpolor.web.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class WelcomeController {
 
-    @RequestMapping({"/", "/index", "/welcome"})
+    @RequestMapping({"/", "/index", "/welcome", "/main"})
     @ResponseBody
-    public String welcome() {
-        return "Springboot Sample Thymeleaf";
-    }
+    public ModelAndView welcome(ModelAndView mav) {
 
-    @RequestMapping({"/hello"})
-    public String hello() {
-        return "hello";
+        mav.setViewName("main");
+        return mav;
     }
 }

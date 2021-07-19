@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Board List</title>
+    <script>
+        function fnRegister() {
+            location.href = "/board/register";
+        }
+    </script>
+    <style>
+        table, tr, th, td {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="header :: header"></div><!-- fragment의 내용을 가져옴 -->
+
+    <h1>Board List</h1>
+
+    <div>
+        <span th:text="'TotalCount : ' + ${totalCount}">0</span>
+    </div>
+
+    <div>
+        <span th:id="totalcount" th:text="#{board.totalCount(${totalCount})}">0</span>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Seq</th>
+            <th>Title</th>
+            <th>CreatedAt</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="board : ${boards}">
+                <td th:text="${board.seq}"></td>
+                <td><a th:text="${board.title}" th:href="@{/board/detail/{seq}(seq=${board.seq})}"></a></td>
+                <td th:text="${board.createdAt}"></td>
+            </tr>
+            <tr>
+                <td th:text="4"></td>
+                <td><a th:text="제목4" th:href="@{/board/detail/4}"></a></td>
+                <td th:text="오늘"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+    <button onclick="fnRegister();">등록</button>
+
+    <div th:include="footer :: footer"></div>
+</body>
+</html>
