@@ -4,24 +4,26 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.simpolor.api.repository.entity.Student;
+import io.simpolor.api.repository.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-import static io.simpolor.api.repository.entity.QStudent.student;
+import static io.simpolor.api.repository.entity.QBoard.board;
 
 @RequiredArgsConstructor
-public class StudentRepositoryImpl implements StudentRepositoryCustom {
+public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public QueryResults<Student> search(String name, Pageable pageable) {
+    public QueryResults<Board> search(String title, Pageable pageable) {
 
         return queryFactory
-                .selectFrom(student)
-                .where(student.name.like("%"+name+"%"))
+                .selectFrom(board)
+                .where(
+                    likeOperation(board.title, title)
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -30,6 +32,6 @@ public class StudentRepositoryImpl implements StudentRepositoryCustom {
     public static BooleanExpression likeOperation(StringPath column, String value) {
         if (StringUtils.isEmpty(value)) return null;
 
-        return column.upper().like(value);
+        return column.upper().like("%"+value+"%");
     }
 }

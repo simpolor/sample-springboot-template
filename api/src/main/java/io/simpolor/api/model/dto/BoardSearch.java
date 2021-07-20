@@ -8,8 +8,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StudentSearchRequest {
+public class BoardSearch {
 
-    String name;
+    String title;
 
 }

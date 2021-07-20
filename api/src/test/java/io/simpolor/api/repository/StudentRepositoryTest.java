@@ -1,6 +1,6 @@
 package io.simpolor.api.repository;
 
-import io.simpolor.api.repository.entity.Student;
+import io.simpolor.api.repository.entity.Board;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.assertj.core.api.Assertions;
@@ -19,27 +19,26 @@ import java.util.Optional;
 public class StudentRepositoryTest {
 
     @Autowired
-    StudentRepository studentRepository;
+    BoardRepository boardRepository;
 
     @BeforeAll
     void init(){
 
         // Mockito.reset();
-        studentRepository.deleteAll();
+        boardRepository.deleteAll();
 
-        Student student = new Student();
-        student.setSeq(1L);
-        student.setName("하니");
-        student.setAge(18);
-        student.setHobby("달리기");
-        studentRepository.save(student);
+        Board board = new Board();
+        board.setSeq(1L);
+        board.setTitle("제목1");
+        board.setContent("내용1");
+        boardRepository.save(board);
     }
 
     @Test
     void testFindAll(){
 
         // given, when
-        List<Student> expected = studentRepository.findAll();
+        List<Board> expected = boardRepository.findAll();
 
         // then
         Assertions.assertThat(expected).isNotEmpty();
@@ -53,30 +52,30 @@ public class StudentRepositoryTest {
         long seq = 1L;
 
         // when
-        Optional<Student> expected = studentRepository.findById(seq);
+        Optional<Board> expected = boardRepository.findById(seq);
 
         // then
         Assertions.assertThat(expected).isNotEmpty();
-        Assertions.assertThat(expected).get().extracting(Student::getSeq).isEqualTo(1L);
-        Assertions.assertThat(expected).get().extracting(Student::getName).isEqualTo("하니");
+        Assertions.assertThat(expected).get().extracting(Board::getSeq).isEqualTo(1L);
+        Assertions.assertThat(expected).get().extracting(Board::getTitle).isEqualTo("제목1");
     }
 
     @Test
     void testSave(){
 
         // given
-        Student student = new Student();
-        student.setName("김철수");
-        student.setAge(19);
-        student.setHobby("고자질하기");
+        Board board = new Board();
+        board.setSeq(2L);
+        board.setTitle("제목2");
+        board.setContent("내용2");
 
         // when
-        Student expected = studentRepository.save(student);
+        Board expected = boardRepository.save(board);
 
         // then
         Assertions.assertThat(expected).isNotNull();
-        Assertions.assertThat(expected).extracting(Student::getSeq).isEqualTo(2L);
-        Assertions.assertThat(expected).extracting(Student::getName).isEqualTo("김철수");
+        Assertions.assertThat(expected).extracting(Board::getSeq).isEqualTo(2L);
+        Assertions.assertThat(expected).extracting(Board::getTitle).isEqualTo("내용2");
     }
 
     @Test
@@ -86,10 +85,10 @@ public class StudentRepositoryTest {
         long seq = 1;
 
         // when
-        studentRepository.deleteById(seq);
+        boardRepository.deleteById(seq);
 
         // then
-        Optional<Student> expected = studentRepository.findById(seq);
+        Optional<Board> expected = boardRepository.findById(seq);
         Assertions.assertThat(expected).isEmpty();
     }
 

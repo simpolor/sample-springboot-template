@@ -1,10 +1,11 @@
 package io.simpolor.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.simpolor.api.model.dto.StudentRequest;
-import io.simpolor.api.repository.StudentRepository;
-import io.simpolor.api.repository.entity.Student;
-import io.simpolor.api.service.StudentService;
+import io.simpolor.api.model.dto.BoardRequest;
+import io.simpolor.api.model.enums.BoardType;
+import io.simpolor.api.repository.BoardRepository;
+import io.simpolor.api.repository.entity.Board;
+import io.simpolor.api.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -19,20 +20,21 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(controllers = {StudentController.class, StudentService.class, StudentRepository.class})
-public class StudentControllerIT {
+@WebMvcTest(controllers = {BoardController.class, BoardService.class, BoardRepository.class})
+public class BoardControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private StudentRepository studentRepository;
+    private BoardRepository boardRepository;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,13 +42,13 @@ public class StudentControllerIT {
     public void testList() throws Exception{
 
         // given
-        Student student = new Student(1L, "하니", 18, "달리기");
-        Mockito.when(studentRepository.findAll()).thenReturn(Arrays.asList(student));
+        Board board = new Board(1L, "제목1", "내용1", BoardType.FREE, LocalDateTime.now(), LocalDateTime.now());
+        Mockito.when(boardRepository.findAll()).thenReturn(Arrays.asList(board));
 
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/students")
+            MockMvcRequestBuilders.get("/boards")
         )
         .andDo(MockMvcResultHandlers.print())
 
@@ -56,8 +58,8 @@ public class StudentControllerIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value[0].seq").value(is(1)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value[0].age").value(is(18)));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value[0].title").value(is("제목1")))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value[0].content").value(is("내용1")));
     }
 
     @Test
@@ -65,13 +67,13 @@ public class StudentControllerIT {
 
         // given
         long seq = 1L;
-        Student student = new Student(1L, "하니", 18, "달리기");
-        Mockito.when(studentRepository.findById(seq)).thenReturn(Optional.of(student));
+        Board board = new Board(1L, "제목1", "내용1", BoardType.FREE, LocalDateTime.now(), LocalDateTime.now());
+        Mockito.when(boardRepository.findById(seq)).thenReturn(Optional.of(board));
 
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/students/1")
+            MockMvcRequestBuilders.get("/boards/1")
         )
 
 
@@ -80,21 +82,21 @@ public class StudentControllerIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value.seq").value(is(1)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value.age").value(is(18)));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value.title").value(is("제목1")))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value.content").value(is("내용1")));
     }
 
     @Test
     public void testRegister() throws Exception{
 
         // given
-        StudentRequest student = new StudentRequest(1L, "하니", 18, "달리기");
-        String request = objectMapper.writeValueAsString(student);
+        BoardRequest boardRequest = new BoardRequest(1L, "제목1", "내용1", BoardType.FREE);
+        String request = objectMapper.writeValueAsString(boardRequest);
 
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/students")
+            MockMvcRequestBuilders.post("/boards")
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(request)
@@ -106,7 +108,7 @@ public class StudentControllerIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")));
-        Mockito.verify(studentRepository, Mockito.times(1)).save(ArgumentMatchers.any());
+        Mockito.verify(boardRepository, Mockito.times(1)).save(ArgumentMatchers.any());
     }
 
     @Test
@@ -114,14 +116,16 @@ public class StudentControllerIT {
 
         // given
         long seq = 1L;
-        StudentRequest student = new StudentRequest(1L, "하니", 18, "달리기");
-        Mockito.when(studentRepository.findById(seq)).thenReturn(Optional.of(student.toStudent()));
-        String request = objectMapper.writeValueAsString(student);
+        Board board = new Board(seq, "제목1", "내용1", BoardType.FREE, LocalDateTime.now(), LocalDateTime.now());
+        Mockito.when(boardRepository.findById(seq)).thenReturn(Optional.of(board));
+
+        BoardRequest boardRequest = new BoardRequest(seq, "제목1", "내용1", BoardType.FREE);
+        String request = objectMapper.writeValueAsString(boardRequest);
 
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.put("/students/{seq}", seq)
+            MockMvcRequestBuilders.put("/boards/{seq}", seq)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(request)
@@ -133,8 +137,8 @@ public class StudentControllerIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")));
-        Mockito.verify(studentRepository, Mockito.times(1)).findById(ArgumentMatchers.any());
-        Mockito.verify(studentRepository, Mockito.times(1)).save(ArgumentMatchers.any());
+        Mockito.verify(boardRepository, Mockito.times(1)).findById(ArgumentMatchers.any());
+        Mockito.verify(boardRepository, Mockito.times(1)).save(ArgumentMatchers.any());
     }
 
     @Test
@@ -146,7 +150,7 @@ public class StudentControllerIT {
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.delete("/students/{seq}", seq)
+            MockMvcRequestBuilders.delete("/boards/{seq}", seq)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
@@ -157,6 +161,6 @@ public class StudentControllerIT {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")));
-        Mockito.verify(studentRepository, Mockito.times(1)).deleteById(ArgumentMatchers.anyLong());
+        Mockito.verify(boardRepository, Mockito.times(1)).deleteById(ArgumentMatchers.anyLong());
     }
 }

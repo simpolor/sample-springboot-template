@@ -1,9 +1,10 @@
 package io.simpolor.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.simpolor.api.model.dto.StudentRequest;
-import io.simpolor.api.repository.entity.Student;
-import io.simpolor.api.service.StudentService;
+import io.simpolor.api.model.dto.BoardRequest;
+import io.simpolor.api.model.enums.BoardType;
+import io.simpolor.api.repository.entity.Board;
+import io.simpolor.api.service.BoardService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
@@ -24,20 +25,21 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.is;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(controllers = {StudentController.class})
-public class StudentControllerTest {
+@WebMvcTest(controllers = {BoardController.class})
+public class BoardControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private StudentService studentService;
+    private BoardService boardService;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,16 +47,16 @@ public class StudentControllerTest {
     public void testSearch() throws Exception{
 
         // given
-        Student student = new Student(1L, "하니", 18, "달리기");
+        Board board = new Board(1L, "제목1", "내용1", BoardType.FREE, LocalDateTime.now(), LocalDateTime.now());
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Student> page = new PageImpl<>(Arrays.asList(student), pageable, 1L);
-        Mockito.when(studentService.search(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(page);
+        Page<Board> page = new PageImpl<>(Arrays.asList(board), pageable, 1L);
+        Mockito.when(boardService.search(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(page);
         // PageableExecutionUtils.getPage(Arrays.asList(student), PageRequest.of(1, 10), () -> 1L);
 
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/students/search")
+            MockMvcRequestBuilders.get("/boards/search")
                 .queryParam("page", "1")
                 .queryParam("size", "10")
         )
@@ -65,8 +67,8 @@ public class StudentControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value.students[0].seq").value(is(1)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value.students[0].age").value(is(18)))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value.boards[0].seq").value(is(1)))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value.boards[0].title").value(is("제목1")))
         .andExpect(MockMvcResultMatchers.jsonPath("$.value.total_page").value(is(1)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.value.total_count").value(is(1)));
     }
@@ -75,8 +77,8 @@ public class StudentControllerTest {
     public void testList() throws Exception{
 
         // given
-        Student student = new Student(1L, "하니", 18, "달리기");
-        Mockito.when(studentService.getAll()).thenReturn(Arrays.asList(student));
+        Board board = new Board(1L, "제목1", "내용1", BoardType.FREE, LocalDateTime.now(), LocalDateTime.now());
+        Mockito.when(boardService.getAll()).thenReturn(Arrays.asList(board));
 
 
         // when
@@ -91,7 +93,7 @@ public class StudentControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")))
         .andExpect(MockMvcResultMatchers.jsonPath("$.value[0].seq").value(is(1)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value[0].age").value(is(18)));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value[0].title").value(is("제목1")));
     }
 
     @Test
@@ -99,13 +101,13 @@ public class StudentControllerTest {
 
         // given
         long seq = 1L;
-        Student student = new Student(seq, "하니", 18, "달리기");
-        Mockito.when(studentService.get(seq)).thenReturn(student);
+        Board board = new Board(seq, "제목1", "내용1", BoardType.FREE, LocalDateTime.now(), LocalDateTime.now());
+        Mockito.when(boardService.get(seq)).thenReturn(board);
 
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/students/1")
+            MockMvcRequestBuilders.get("/boards/1")
         )
 
 
@@ -115,15 +117,15 @@ public class StudentControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")))
         .andExpect(MockMvcResultMatchers.jsonPath("$.value.seq").value(is(1)))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.value.age").value(is(18)));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.value.title").value(is("제목1")));
     }
 
     @Test
     public void testRegister() throws Exception{
 
         // given
-        StudentRequest student = new StudentRequest(1L, "하니", 18, "달리기");
-        String request = objectMapper.writeValueAsString(student);
+        BoardRequest boardRequest = new BoardRequest(1L, "제목1", "내용1", BoardType.FREE);
+        String request = objectMapper.writeValueAsString(boardRequest);
 
 
         // when
@@ -140,7 +142,7 @@ public class StudentControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")));
-        Mockito.verify(studentService, Mockito.times(1)).create(ArgumentMatchers.any());
+        Mockito.verify(boardService, Mockito.times(1)).create(ArgumentMatchers.any());
     }
 
     @Test
@@ -148,13 +150,13 @@ public class StudentControllerTest {
 
         // given
         long seq = 1L;
-        StudentRequest student = new StudentRequest(seq, "하니", 18, "달리기");
-        String request = objectMapper.writeValueAsString(student);
+        BoardRequest boardRequest = new BoardRequest(1L, "제목1", "내용1", BoardType.FREE);
+        String request = objectMapper.writeValueAsString(boardRequest);
 
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.put("/students/{seq}", seq)
+            MockMvcRequestBuilders.put("/boards/{seq}", seq)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(request)
@@ -166,7 +168,7 @@ public class StudentControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")));
-        Mockito.verify(studentService, Mockito.times(1)).update(ArgumentMatchers.any());
+        Mockito.verify(boardService, Mockito.times(1)).update(ArgumentMatchers.any());
     }
 
     @Test
@@ -178,7 +180,7 @@ public class StudentControllerTest {
 
         // when
         mockMvc.perform(
-            MockMvcRequestBuilders.delete("/students/{seq}", seq)
+            MockMvcRequestBuilders.delete("/boards/{seq}", seq)
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
         )
@@ -189,6 +191,6 @@ public class StudentControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(is(0)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(is("Success")));
-        Mockito.verify(studentService, Mockito.times(1)).delete(ArgumentMatchers.anyLong());
+        Mockito.verify(boardService, Mockito.times(1)).delete(ArgumentMatchers.anyLong());
     }
 }

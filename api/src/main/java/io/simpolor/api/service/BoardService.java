@@ -1,10 +1,9 @@
-package io.simpolor.web.service;
+package io.simpolor.api.service;
 
 import com.querydsl.core.QueryResults;
-import io.simpolor.web.exception.ApplicationException;
-import io.simpolor.web.exception.ExceptionType;
-import io.simpolor.web.repository.BoardRepository;
-import io.simpolor.web.repository.entity.Board;
+import io.simpolor.api.exception.NotFoundException;
+import io.simpolor.api.repository.BoardRepository;
+import io.simpolor.api.repository.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,41 +19,44 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public Page<Board> search(String title, Pageable pageable){
+    public Page<Board> search(String name, Pageable pageable){
 
-        QueryResults<Board> queryResults = boardRepository.search(title, pageable);
+        QueryResults<Board> queryResults = boardRepository.search(name, pageable);
 
-        return new PageImpl<>(queryResults.getResults(), pageable, queryResults.getTotal());
+        return new PageImpl<>(
+                queryResults.getResults(),
+                pageable,
+                queryResults.getTotal());
     }
 
-    public long getTotalCount() {
+    public Long getTotalCount() {
         return boardRepository.count();
     }
 
-    public List<Board> getAll() {
+    public List<Board> getAll(){
+
         return boardRepository.findAll();
     }
 
-    public Board get(long seq) {
+    public Board get(long seq){
 
         Optional<Board> optionalBoard = boardRepository.findById(seq);
         if(!optionalBoard.isPresent()){
-            throw new ApplicationException(ExceptionType.NOT_FOUND, "NotFound Entity : {}", seq);
+            throw new NotFoundException("Notfound seq : {}", seq);
         }
 
         return optionalBoard.get();
     }
 
-    public Board create(Board board) {
-
-        return boardRepository.save(board);
+    public void create(Board board){
+        boardRepository.save(board);
     }
 
-    public Board update(Board board) {
+    public void update(Board board){
 
         Optional<Board> optionalBoard = boardRepository.findById(board.getSeq());
         if(!optionalBoard.isPresent()){
-            throw new ApplicationException(ExceptionType.NOT_FOUND, "NotFound Entity : {}", board.getSeq());
+            throw new NotFoundException("Notfound seq : {}", board.getSeq());
         }
 
         Board object = optionalBoard.get();
@@ -62,14 +64,10 @@ public class BoardService {
         object.setContent(board.getContent());
 
         boardRepository.save(object);
-
-        return board;
     }
 
-    public Long delete(long seq) {
+    public void delete(long seq){
 
         boardRepository.deleteById(seq);
-        return seq;
     }
-
 }

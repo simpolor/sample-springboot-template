@@ -1,6 +1,5 @@
 package io.simpolor.web.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.simpolor.web.model.enums.BoardType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
