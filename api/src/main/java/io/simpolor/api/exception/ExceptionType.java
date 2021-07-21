@@ -1,4 +1,4 @@
-package io.simpolor.web.exception;
+package io.simpolor.api.exception;
 
 import lombok.Getter;
 

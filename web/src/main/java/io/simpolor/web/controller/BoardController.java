@@ -138,7 +138,7 @@ public class BoardController {
 	@GetMapping(value="/comment")
 	public ModelAndView comment(ModelAndView mav) {
 
-		throw new NotFoundException();
+		throw new NotFoundException("Notfound comment");
 	}
 
 }

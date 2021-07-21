@@ -1,6 +1,7 @@
 package io.simpolor.api.advice;
 
 import io.simpolor.api.exception.ApplicationException;
+import io.simpolor.api.exception.NotFoundException;
 import io.simpolor.api.exception.ServiceException;
 import io.simpolor.api.exception.WrongApiUsageException;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +26,20 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice(annotations = WithServiceResponse.class)
 public class ServiceExceptionHandler {
 
+    @ExceptionHandler(NotFoundException.class)
+    public ServiceResponse<Void> of(NotFoundException e) {
+
+        log.info("Notfound exception : {}", e.getMessage());
+
+        return ServiceResponse.of(e);
+    }
+
     @ExceptionHandler(ApplicationException.class)
     public ServiceResponse<Void> of(ApplicationException e) {
 
         log.info("Application exception : {}", e.getMessage(), e);
 
         return ServiceResponse.of(e);
-
     }
 
     /**
@@ -39,7 +47,7 @@ public class ServiceExceptionHandler {
      * @param e
      * @return
      */
-    // @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ServiceResponse<Void> of(Exception e) {
 

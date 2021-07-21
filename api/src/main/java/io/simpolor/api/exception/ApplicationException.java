@@ -8,11 +8,27 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicationException extends RuntimeException {
 
-    Long code;
+    Integer code;
 
     String message;
 
-    public ApplicationException(Long code, String message){
+    public ApplicationException(ExceptionType exceptionType){
+
+        super(exceptionType.getMessage());
+
+        this.code = exceptionType.getCode();
+        this.message = exceptionType.getMessage();
+    }
+
+    public ApplicationException(ExceptionType exceptionType, String message){
+
+        super(message);
+
+        this.code = exceptionType.getCode();
+        this.message = message;
+    }
+
+    public ApplicationException(Integer code, String message){
 
         super(message);
 

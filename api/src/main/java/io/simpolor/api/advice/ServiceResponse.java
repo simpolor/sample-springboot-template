@@ -8,10 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 @Value
 public class ServiceResponse<T> {
 
-    public static final Long SUCCESS = 0L;
+    public static final Integer SUCCESS = 0;
     public static final String SUCCESS_MESSAGE = "Success";
 
-    Long code;
+    Integer code;
 
     String message;
 
