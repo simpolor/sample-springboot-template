@@ -1,6 +1,6 @@
 package io.simpolor.api.advice;
 
-import io.simpolor.api.exception.ApplicationException;
+import io.simpolor.api.exception.ApiException;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ public class ServiceResponse<T> {
         return new ServiceResponse<>(SUCCESS, SUCCESS_MESSAGE, response);
     }
 
-    public static ServiceResponse<Void> of(ApplicationException ae) {
+    public static ServiceResponse<Void> of(ApiException ae) {
 
         return new ServiceResponse<>(ae.getCode(), ae.getMessage(), null);
     }

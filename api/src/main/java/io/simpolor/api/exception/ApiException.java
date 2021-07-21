@@ -6,13 +6,13 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ApplicationException extends RuntimeException {
+public class ApiException extends RuntimeException {
 
     Integer code;
 
     String message;
 
-    public ApplicationException(ExceptionType exceptionType){
+    public ApiException(ExceptionType exceptionType){
 
         super(exceptionType.getMessage());
 
@@ -20,7 +20,7 @@ public class ApplicationException extends RuntimeException {
         this.message = exceptionType.getMessage();
     }
 
-    public ApplicationException(ExceptionType exceptionType, String message){
+    public ApiException(ExceptionType exceptionType, String message){
 
         super(message);
 
@@ -28,7 +28,7 @@ public class ApplicationException extends RuntimeException {
         this.message = message;
     }
 
-    public ApplicationException(Integer code, String message){
+    public ApiException(Integer code, String message){
 
         super(message);
 

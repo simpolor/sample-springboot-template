@@ -1,8 +1,8 @@
 package io.simpolor.api.advice;
 
-import io.simpolor.api.exception.ApplicationException;
+import io.simpolor.api.exception.ApiException;
 import io.simpolor.api.exception.NotFoundException;
-import io.simpolor.api.exception.ServiceException;
+import io.simpolor.api.exception.UnknownException;
 import io.simpolor.api.exception.WrongApiUsageException;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
@@ -34,8 +34,8 @@ public class ServiceExceptionHandler {
         return ServiceResponse.of(e);
     }
 
-    @ExceptionHandler(ApplicationException.class)
-    public ServiceResponse<Void> of(ApplicationException e) {
+    @ExceptionHandler(ApiException.class)
+    public ServiceResponse<Void> of(ApiException e) {
 
         log.info("Application exception : {}", e.getMessage(), e);
 
@@ -53,7 +53,7 @@ public class ServiceExceptionHandler {
 
         log.error("Service exception : {}", e.getMessage(), e);
 
-        return ServiceResponse.of(new ServiceException());
+        return ServiceResponse.of(new UnknownException());
 
     }
 
